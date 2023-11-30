@@ -16,9 +16,9 @@ import data.ChatRoom;
 
 public class UserList {
 
-	volatile Map<String,User> userMap;
-	String path;
-	File dir;
+	volatile Map<String,User> userMap;	// id, user 저장 맵
+	String path;										// user 데이터 저장 폴더 주소
+	File dir;												// user 데이터 저장 폴더
 	
 	// 생성자
 	public UserList() {
@@ -29,7 +29,7 @@ public class UserList {
 		getMap();
 	}
 
-
+	// 폴더에서 user파일들을 읽어와 userMap에 저장
 	void getMap(){
 		this.userMap = new HashMap<String, User>();
 		
@@ -74,7 +74,7 @@ public class UserList {
 		
 	} // getMap
 	
-	
+	// 회원가입
 	boolean signUp(User user) {
 		System.out.println("회원가입 시도");
 		if(isExistUser(user)) {
@@ -86,6 +86,7 @@ public class UserList {
 		}
 	} // signUp
 	
+	// 유저 추가
 	void addUser(User user) {
 		this.userMap.put(user.getId(), user);
 		
@@ -111,29 +112,34 @@ public class UserList {
 		}
 	} // addUser
 	
-	
+	// 로그인 처리과정
 	boolean login(User user) {
 		System.out.println("로그인 시도");
 		if(isExistUser(user) && isCorrectPW(user)) {
+			// id 존재하고 비밀번호가 맞을 때(=로그인 성공)
 			return true;
 		} else {
 			return false;
 		}
 	} // login
 	
+	// id가 존재하는 지 확인
 	boolean isExistUser(User user) {
 		return this.userMap.containsKey(user.getId());
 	} // isExistUser
 	
+	// 비밀번호가 맞는지
 	boolean isCorrectPW(User user) {
 		String pw = getUser(user.getId()).getPassword();
 		return (user.getPassword()).equals(pw);
 	} // isCorrectPW
 
+	// id에 해당하는 유저 반환
 	User getUser(String id) {
 		return userMap.get(id);
 	} // getUser
 	
+	// 채팅창에 있는 유저 리스트와 유저가 가지고 있는 채팅방 리스트 연동
 	void linkUserToChat(ChatRoom chat) {
 		Set<String> idSet = chat.getIdSet();
 		int chatId = chat.getChatId();
@@ -154,6 +160,6 @@ public class UserList {
 				}
 			}
 		}
-	}
+	} // linkUserToChat
 
 } // class

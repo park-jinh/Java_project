@@ -7,14 +7,15 @@ public class TransmitData implements Serializable {
 
 	public static final long serialVersionUID = 71552368142L;
 	
-	public static final byte BOOLEAN = 0;
-	public static final byte LOGIN = 1;
-	public static final byte CHATLIST = 2;
-	public static final byte ONLINE = 3;
-	public static final byte MESSAGE = 4;
-	public static final byte REQ_ADD_CHAT = 5;
-	public static final byte REQ_CHATLIST = 6;
-	public static final byte REQ_ONLINE = 7;
+	// 전송 데이타가 가진 데이터 지정
+	public static final byte BOOLEAN = 0;				// boolean 데이타
+	public static final byte LOGIN = 1;					// login 데이타
+	public static final byte CHATLIST = 2;				// 채팅방리스트 데이타
+	public static final byte ONLINE = 3;					// online유저 id 데이타
+	public static final byte MESSAGE = 4;				// message 데이타
+	public static final byte REQ_ADD_CHAT = 5;	// 채팅방 추가 요청, 채팅방 데이타
+	public static final byte REQ_CHATLIST = 6;		// 채팅방 리스트 요청, 채팅방리스트 데이타
+	public static final byte REQ_ONLINE = 7;			// 온라인유저 리스트 요청, 온라인유저리스트 데이타
 	
 	private byte option;
 	private List<ChatRoom> chatList;
@@ -24,6 +25,7 @@ public class TransmitData implements Serializable {
 	private List<String> onlineUsers;
 	private boolean bool;
 	
+	// 생성자
 	public TransmitData() {
 	}
 	public TransmitData(byte option) {
@@ -34,6 +36,7 @@ public class TransmitData implements Serializable {
 		this.option = option;
 		setData(obj);
 	}
+	
 	public byte getOption() {
 		return option;
 	}
@@ -71,6 +74,7 @@ public class TransmitData implements Serializable {
 		this.bool = bool;
 	}
 	
+	// 옵션에 해당하는 데이타 반환
 	public Object getData() {
 		switch(this.option) {
 		case TransmitData.BOOLEAN :
@@ -89,6 +93,8 @@ public class TransmitData implements Serializable {
 			return null;
 		}
 	}
+	
+	// 옵션에 해당하는 데이타 세팅
 	@SuppressWarnings("unchecked")
 	public void setData(Object obj) {
 		switch(this.option) {

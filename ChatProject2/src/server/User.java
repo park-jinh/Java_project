@@ -8,9 +8,9 @@ public class User implements Serializable{
 	
 	public static final long serialVersionUID = 18123541235112L;
 	
-	private String id;
-	private String password;
-	private List<Integer> chatList;
+	private String id;							// 유저 아이디
+	private String password;				// 유저 비밀번호
+	private List<Integer> chatList;		// 유저가 가진 채팅방 리스트
 	
 	public User() {
 	}

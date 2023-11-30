@@ -44,6 +44,8 @@ public class MainGUI extends JFrame {
 	ChatRoom chat;
 	List<ChatGUI> chatGUIList;
 	String id;
+	
+	// 생성자
 	public MainGUI() {
 	}
 	public MainGUI(Socket socket,ObjectOutputStream oos,ObjectInputStream ois,List<ChatGUI> chatGUIList,String id) {
@@ -54,6 +56,7 @@ public class MainGUI extends JFrame {
 		this.id = id;
 		init();
 	}
+	
 	
 	void init() {
 		this.setTitle("채팅 프로그램 ("+id+")");
@@ -104,7 +107,7 @@ public class MainGUI extends JFrame {
 		gridbagInsert(gridbag,label5,0,4,1,1,1,1);
 		gridbagInsert(gridbag,label6,0,5,1,1,1,1);
 		gridbagInsert(gridbag,label7,0,6,1,1,1,1);
-		gridbagInsert(gridbag,panel,1,0,5,7,4,1);
+		gridbagInsert(gridbag,panel,1,0,5,7,5,1);
 		
 		
 		this.setSize(500,700);
@@ -167,12 +170,13 @@ public class MainGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// 채팅방 입장 버튼 클릭 시
 				int index = jChatList.getSelectedIndex();
-				chatGUIList.get(index).loadChatMsg();
+//				chatGUIList.get(index).loadChatMsg();
 				chatGUIList.get(index).setVisible(true);
 			}
 		});
 	} // init
 	
+	// gridbag 레이아웃 설정하여 컴포넌트 넣기
 	void gridbagInsert(GridBagLayout gridbag,Component c, int x, int y,int w,int h, int wx,int wy) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;

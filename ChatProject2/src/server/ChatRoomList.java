@@ -16,9 +16,9 @@ import data.ChatRoom;
 
 public class ChatRoomList {
 
-	volatile Map<Integer, ChatRoom> chatMap;
-	volatile Map<Set<String>, Integer> userChatMap;
-	UserList userList;
+	volatile Map<Integer, ChatRoom> chatMap;				// 채팅창번호, 채팅창 저장
+	volatile Map<Set<String>, Integer> userChatMap;	// 유저id 셋, 채팅창번호 저장 
+	UserList userList;														// user들의 정보가 모인 객체
 	String path;
 	File dir;
 	
@@ -31,6 +31,7 @@ public class ChatRoomList {
 		initChatMap();
 	}
 	
+	// chat 폴더에서 채팅방 정보 읽어드려 객체에 저장
 	void initChatMap(){
 		this.chatMap = new HashMap<Integer, ChatRoom>();
 		this.userChatMap = new HashMap<Set<String>, Integer>();
@@ -68,6 +69,7 @@ public class ChatRoomList {
 		} // else
 	} // initChatMap
 	
+	// 새로운 채팅발 개설 로직
 	boolean createChat(ChatRoom chat) {
 		System.out.println("챗 생성 시도");
 		if(isPossibleCreateChat(chat)) {
@@ -87,6 +89,7 @@ public class ChatRoomList {
 		}
 	}
 	
+	// 채팅방 추가
 	void addChat(ChatRoom chat){
 		System.out.println("채팅방 추가");
 		chatMap.put(chat.getChatId(), chat);
@@ -112,6 +115,7 @@ public class ChatRoomList {
 		}
 	} // addChat
 	
+	// 채팅방 생성할 수 있는지
 	boolean isPossibleCreateChat(ChatRoom chat) {
 		if(this.userChatMap.containsKey(chat.getIdSet())) {
 			return false;
@@ -120,9 +124,9 @@ public class ChatRoomList {
 		}
 	}
 	
+	// user가 가진 채팅방 리스트 반환
 	List<ChatRoom> getChatListByUser(User user){
 		List<ChatRoom> chatList = new ArrayList<ChatRoom>();
-		//null주의
 		if(user.getChatList()!=null) {
 			for(int chatId : user.getChatList()) {
 				chatList.add(chatMap.get(chatId));
@@ -131,10 +135,12 @@ public class ChatRoomList {
 		return chatList;
 	}
 	
+	// 채팅방번호에 해당하는 채팅반 반환
 	ChatRoom getChat(int chatId) {
 		return chatMap.get(chatId);
 	}
 	
+	// 채팅방 정보 저장
 	void save() {
 		if(!chatMap.isEmpty()) {
 			ObjectOutputStream os = null;

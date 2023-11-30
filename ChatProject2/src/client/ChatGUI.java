@@ -30,6 +30,7 @@ public class ChatGUI extends JFrame{
 	String id;
 	JTextArea chatTextArea;
 	
+	// 생성자
 	public ChatGUI() {
 	}
 	public ChatGUI(ChatRoom chatRoom,ObjectOutputStream oos, String id) {
@@ -47,6 +48,7 @@ public class ChatGUI extends JFrame{
 		
 		chatTextArea = new JTextArea("");
 		chatTextArea.setEditable(false);
+		chatTextArea.setLineWrap(true);
 		JScrollPane scrollPane = new JScrollPane(chatTextArea);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -68,7 +70,7 @@ public class ChatGUI extends JFrame{
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(false);
 		
-		// 버튼 클릭 받을 때 작동할 내용
+		// 버튼 클릭 할 때 작동할 내용
 		sendBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -83,8 +85,10 @@ public class ChatGUI extends JFrame{
 			}
 		});
 		
-	}
+		loadChatMsg();
+	} // init
 	
+	// gridbag 레이아웃으로 컴포넌트 넣는 메소드
 	void gridbagInsert(GridBagLayout gridbag,Component c, int x, int y,int w,int h, int wx,int wy) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
@@ -98,6 +102,7 @@ public class ChatGUI extends JFrame{
 		this.add(c);
 	}
 	
+	// 처음 시작 시 채팅창에 메세지들 로딩하는 메소드 
 	void loadChatMsg() {
 		if(chatRoom.getmList() != null) {
 			List<Message> msgList=chatRoom.getmList();
@@ -108,6 +113,7 @@ public class ChatGUI extends JFrame{
 		}
 	}
 	
+	// 메세지 전송하는 메소드
 	void sendMsg(JTextField jtf) {
 		// 메세지를 서버로 보내는 메소드
 		String str = jtf.getText();
@@ -121,6 +127,7 @@ public class ChatGUI extends JFrame{
 		jtf.setText("");
 	}
 	
+	// 메세지 수신 시 채팅창에 메세지 넣는 메소드
 	void addMsg(Message msg) {
 		chatRoom.addMsg(msg);
 		if((msg.getWriter()).equals(id)) {

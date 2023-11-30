@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -23,10 +26,10 @@ import data.TransmitData;
 
 public class LoginGUI extends JFrame {
 	
-	JLabel msgLabel;
-	JTextField idText;
-	JTextField pwText;
-	LoginData data;
+	JLabel msgLabel;					// 정보 문자열 출력할 레이블
+	JTextField idText;					// id 입력창
+	JTextField pwText;					// pw 입력창
+	LoginData data;					// 로그인 데이터
 	Socket socket;
 	ObjectOutputStream oos;
 	ObjectInputStream ois;
@@ -83,6 +86,7 @@ public class LoginGUI extends JFrame {
 		signBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// 회원가입 버튼 클릭 이벤트
 				signBtnClick();
 			}
 		});
@@ -95,6 +99,7 @@ public class LoginGUI extends JFrame {
 		okBtn.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// 로그인 버튼 클릭 이벤트
 				okBtnClick();
 			}
 		});
@@ -102,24 +107,28 @@ public class LoginGUI extends JFrame {
 		idText.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				idText.setText("");
-			}
-		});
-		pwText.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				pwText.setText("");
+				// 아이디입력 창 클릭했을 시 이벤트
+				if(("아이디 입력").equals(idText.getText()))
+					idText.setText("");
 			}
 		});
 		
+		pwText.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				// 비밀번호 입력 창 활성화 되었을 시 이벤트
+				if(("비밀번호 입력").equals(pwText.getText()))
+					pwText.setText("");
+			}
+		});
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
-	}
+	} // init
 	
 	
+	// 회원가입 버튼 클릭 시 작동할 메소드
 	void signBtnClick() {
-		// 회원가입 버튼 클릭 시 작동할 메소드
 		if(send(false)) {
 			//정상적으로 회원가입 되었을 떄
 			msgLabel.setText("회원가입 성공");
@@ -128,24 +137,23 @@ public class LoginGUI extends JFrame {
 			// 실패했을 때
 			msgLabel.setText("중복되는 아이디가 있습니다.");
 		}
-	}
+	} // signBtnClick
 	
+	// 로그인 버튼 클릭 시 작동할 메소드
 	void okBtnClick() {
-		// 로그인 버튼 클릭 시 작동할 메소드
 		if(send(true)) {
 			//정상적으로 로그인 되었을 떄
-			id = this.idText.getText();
 			msgLabel.setText("로그인 성공");
 			close();
 		} else {
 			// 실패했을 때
 			msgLabel.setText("로그인에 실패했습니다. 다시확인하세요.");
 		}
-	}
+	} // okBtnClick
 	
+	// 로그인 정보 보내는 메소드
 	boolean send(boolean flag) {
 		msgLabel.setText("");
-//		String pw = pwHashing(this.pwText.getText()); 
 		data = new LoginData(this.idText.getText(),this.pwText.getText(), flag);
 		tData = new TransmitData(TransmitData.LOGIN, data);
 		boolean bool=false;
@@ -162,6 +170,16 @@ public class LoginGUI extends JFrame {
 		return bool;
 	} // send
 	
+	// 로그인 창이 끝날때 메소드
+	void close() {
+		id = this.idText.getText();
+		new ClientMain(socket,oos,ois,id).start();
+		this.dispose();
+	}
+	
+	/*
+	 *비밀번호를 SHA-256으로 해싱하는 메소드
+	 *
 	String pwHashing(String pw){
 		MessageDigest md = null;
 		try {
@@ -176,11 +194,8 @@ public class LoginGUI extends JFrame {
 	
 		return pw;
 	}
+	*/
 	
-	void close() {
-		new ClientMain(socket,oos,ois,id).start();
-		this.dispose();
-	}
 	
 	public static void main(String[] args) {
 		Socket socket = null;

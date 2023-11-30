@@ -14,9 +14,9 @@ import data.Message;
 import data.TransmitData;
 
 public class ClientMain extends Thread{
-	Socket socket = null;
-	ObjectOutputStream oos = null;
-	ObjectInputStream ois = null;
+	Socket socket;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
 	TransmitData tData;
 	MainGUI mainGUI;
 	List<String> userNameList;
@@ -26,7 +26,7 @@ public class ClientMain extends Thread{
 	List<ChatGUI> chatGUIList;
 	String id;
 	
-	
+	// 생성자
 	public ClientMain(Socket socket, ObjectOutputStream oos, ObjectInputStream ois,String id) {
 		super();
 		this.socket = socket;
@@ -45,8 +45,6 @@ public class ClientMain extends Thread{
 	}
 	
 	void init() {
-		
-		
 		try {
 			while(true) {
 				tData = (TransmitData)ois.readObject();
@@ -57,8 +55,10 @@ public class ClientMain extends Thread{
 		}catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 		}
-	}
+	} // init
 
+	
+	// 데이터 수신 후 처리 과정
 	void seqAfterRead() {
 		System.out.println("수신완료"+tData.getOption());
 		System.out.println(tData);
@@ -71,16 +71,7 @@ public class ClientMain extends Thread{
 			// 채팅창 리스트 업데이트 코드
 			chatRoomList = (List<ChatRoom>)tData.getData();
 			if(chatRoomList != null) {
-				int listSize = chatRoomList.size();
-				ChatGUI chatGUI = null;
-				for(int i=0;i<listSize;i++) {
-					chatName.add(chatRoomList.get(i).getName());
-					chatGUI = new ChatGUI(chatRoomList.get(i),oos,id);
-					this.chatGUIList.add(chatGUI);
-					chatMap.put(chatRoomList.get(i).getChatId(), chatGUI);
-				}
-				
-				updateChatList();
+				loadChatList();
 			}
 			return;
 		case TransmitData.ONLINE :
@@ -108,14 +99,30 @@ public class ClientMain extends Thread{
 		}
 	}
 	
+	// 유저리스트 업데이트하는 메소드
 	void updateUserList() {
 		mainGUI.jUserList.setListData(userNameList.toArray(new String[userNameList.size()]));
 	}
 	
+	void loadChatList() {
+		int listSize = chatRoomList.size();
+		ChatGUI chatGUI = null;
+		
+		for(int i=0;i<listSize;i++) {
+			chatName.add(chatRoomList.get(i).getName());
+			chatGUI = new ChatGUI(chatRoomList.get(i),oos,id);
+			this.chatGUIList.add(chatGUI);
+			chatMap.put(chatRoomList.get(i).getChatId(), chatGUI);
+		}
+		updateChatList();
+	}
+	
+	// 채팅방리스트 업데이트하는 메소드
 	void updateChatList() {
 		mainGUI.jChatList.setListData(chatName.toArray(new String[chatName.size()]));
 	}
 	
+	// 채팅방 추가하는 메소드
 	void addChatRoom(ChatRoom chat) {
 		if(chatRoomList == null) {
 			chatRoomList = new ArrayList<ChatRoom>();
@@ -128,4 +135,5 @@ public class ClientMain extends Thread{
 		chatMap.put(chat.getChatId(), chatGUI);
 		updateChatList();
 	}
-}
+	
+} // class
