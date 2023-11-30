@@ -13,8 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import data.ChatRoom;
-import data.Message;
-import data.TransmitData;
 
 public class ChatRoomList {
 

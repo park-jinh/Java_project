@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import data.ChatRoom;
-import data.TransmitData;
 
 public class UserList {
 
@@ -59,7 +57,7 @@ public class UserList {
 					while((readLine = br.readLine())!=null) {
 						list.add(Integer.parseInt(readLine));
 					}
-					user = new User(id,pw,null,list,false);
+					user = new User(id,pw,list);
 					this.userMap.put(user.getId(), user);
 					System.out.println(user);
 				} catch(IOException ioe) {
@@ -117,7 +115,6 @@ public class UserList {
 	boolean login(User user) {
 		System.out.println("로그인 시도");
 		if(isExistUser(user) && isCorrectPW(user)) {
-			getUser(user.getId()).setOnlineYN(true);
 			return true;
 		} else {
 			return false;
@@ -135,24 +132,7 @@ public class UserList {
 
 	User getUser(String id) {
 		return userMap.get(id);
-	}
-	
-	
-	// 온라인 유저 리스트 반환
-	List<String> getOnlineUserList(){
-		Object[] userList = this.userMap.values().toArray();
-		User user = null;
-		List<String> onlineList = new ArrayList<String>();
-		int listSize = userList.length;
-		
-		for(int i=0;i<listSize;i++) {
-			user = (User)userList[i];
-			if(user.isOnlineYN())
-				onlineList.add(user.getId());
-		}
-		
-		return onlineList;
-	}
+	} // getUser
 	
 	void linkUserToChat(ChatRoom chat) {
 		Set<String> idSet = chat.getIdSet();
